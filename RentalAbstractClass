@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+public enum Status
+    {
+    Compact,
+    Sedan,
+    Luxury,
+    SUV
+    }
+
+namespace RentalNamespace
+{
+    public abstract class Rental
+    {
+        protected string fullName;
+        protected int phoneNumber;
+        protected string statusType;
+        protected Status carType;
+        DateTime pickUpDate;
+        DateTime dropOffDate;
+        int daysRented;
+
+        public Rental()
+        {
+            //The abstract class will have: 
+            //a return method to calculate 
+            //the car fee (days * price) to 
+            //the inherited classes; an override 
+            //ToString method; and an abstract method 
+            //to calculate the total charges
+        }
+
+        public DateTime PickUp
+        {
+            set { pickUpDate = value; }
+        } // End Pick Up
+
+        public DateTime DropOff
+        {
+            set { dropOffDate = value;
+                if (dropOffDate <= pickUpDate)
+                {
+                    throw (new Exception("Dates not correct"));
+                }            
+            }
+        } // End Drop Off
+
+        public Rental(string eFullName, int ePhoneNumber, Status eCarType)
+        {
+            fullName = eFullName;
+            phoneNumber = ePhoneNumber;
+            statusType = carType == Status.Compact ? "Compact" : "Sedan";
+            statusType = carType == Status.Luxury ? "Luxury" : "SUV";
+        }
+
+        protected double CarFee(double amountDue)
+        {
+            double carFee;
+            double compact = 30;
+            double sedan = 40;
+            double luxury = 60;
+            double suv = 80;
+            double tax = .1 * amountDue;
+            daysRented = dropOffDate.DayOfYear - pickUpDate.DayOfYear;
+      
+            if (carType == Status.Compact)
+            {
+                amountDue = daysRented * compact;
+            }
+            else if (carType == Status.Sedan)
+            {
+                amountDue = daysRented * sedan;
+            }
+            else if (carType == Status.Luxury)
+            {
+                amountDue = daysRented * luxury;
+            }
+            else
+            {
+                amountDue = daysRented * suv;
+            }
+            carFee = amountDue + tax;
+
+
+            return carFee;
+        }
+
+        public abstract double TotalCharges();
+
+        public override string ToString()
+        {
+            string str = $"Name:\t{fullName}";
+            str += $"Phone#:\t{phoneNumber}";
+            str += $"Days Rented:\t{daysRented}";
+            return str;
+        }
+    }
+}
