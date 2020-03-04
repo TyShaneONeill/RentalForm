@@ -1,0 +1,69 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RentalNamespace;
+
+namespace BusinessRentalNamespace
+{
+    public class Business : Rental
+    {
+        private double amountDue;
+        private double amountWithDiscount;
+        private double carFee;
+        private double milageCost;
+        private double startMilage;
+        private double endMilage;
+        private double tripMilage;
+        const double DISCOUNT = .10;
+        const double PER_MILE = .20;
+        public Business(string eFullName, int ePhoneNumber, Status eCarType, int eMilageCost)
+            :base(eFullName,ePhoneNumber, eCarType)
+        {
+            milageCost = eMilageCost;
+        }
+
+        public double StartMilage
+        {
+            set { startMilage = value; }
+        }
+
+        public double EndMilage
+        {
+            set { endMilage = value; }
+        }
+
+        public override double TotalCharges()
+        {
+            // 10% Discount on the car fee, but is charged 20 cents per mile for the gas used.
+            amountDue = CarFee(amountDue);
+            amountWithDiscount = amountDue - (amountDue * DISCOUNT);
+            getMilageCost();
+            amountWithDiscount += milageCost;
+
+            return carFee;
+        }
+
+        private void getMilageCost()
+        {
+            milageCost = (endMilage - startMilage) * PER_MILE; 
+        }
+
+        public override string ToString()
+        {
+            TotalCharges();
+            double discount = amountDue * DISCOUNT;
+            double tax = .10 * amountWithDiscount;
+            tripMilage = endMilage - startMilage;
+            string str = $"Car fee:\t{amountDue:C}";
+            str += $"\r\n";
+            str += $"Discount:\t {discount:C}";
+            str += $"Discounted Car Fee: {amountWithDiscount:C}";
+            str += $"Miles {tripMilage} Gas charge: {milageCost:C}";
+            str += $"Tax:\t {tax:C}";
+            str += $"Total Rental Charge: {carFee}";
+            return str;
+        }
+    }
+}
