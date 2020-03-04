@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using RentalNamespace;
+using BusinessRentalNamespace;
+using PersonalRentalNamespace;
+
+namespace CarRentalInheritanceApp
+{
+
+    public partial class Form1 : Form
+    {
+        int phoneNumber;
+        int startMilage;
+        int endMilage;
+
+        private Rental aRental;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnCalculate_Click(object sender, EventArgs e)
+        {
+            ContactInfoCheck();
+            aRental.TotalCharges();
+            txtReceipt.Text = aRental.ToString();
+        }
+
+        private void ContactInfoCheck()
+        {
+            if (txtName.Text == string.Empty)
+            {
+                errProvider.SetError(txtName, "Name Required");
+            }
+            else if (int.TryParse(txtNumber.Text, out phoneNumber) == false)
+            {
+                errProvider.Clear();
+                errProvider.SetError(txtNumber, "Number Incorrect");
+            }
+            else
+            {
+                errProvider.Clear();
+            }
+        }
+
+        private void MilageCheck()
+        {
+
+            if (int.TryParse(txtStartMilage.Text, out startMilage) == false)
+            {
+                errProvider.SetError(txtStartMilage, "Must be numerical.");
+            }
+            else if (int.TryParse(txtEndMilage.Text, out endMilage) == false)
+            {
+                errProvider.Clear();
+                errProvider.SetError(txtEndMilage, "Must be numerical.");
+            }
+            else
+            {
+                startMilage = int.Parse(txtStartMilage.Text);
+                endMilage = int.Parse(txtEndMilage.Text);
+
+                if (startMilage > endMilage)
+                {
+                    errProvider.Clear();
+                    errProvider.SetError(grpMilage, "Milage Error");
+                }
+                else
+                {
+                    errProvider.Clear();
+                }
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            grpMilage.Visible = false;
+            radCompact.Checked = true;
+            radPersonal.Checked = true;
+        }
+
+        private void radBusiness_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if(radBusiness.Checked)
+            {
+                grpMilage.Visible = true;
+            }
+        }
+
+        private void radPersonal_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (radPersonal.Checked)
+            {
+                grpMilage.Visible = false;
+            }
+        }
+    }
+}
