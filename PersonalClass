@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RentalNamespace;
+
+namespace PersonalRentalNamespace
+{
+    public class Personal : Rental
+    {
+        private double amountDue;
+        private double personalCharge;
+        private double carFee;
+        DateTime pickUpDate;
+
+
+        public Personal(string eFullName, int ePhoneNumber, Status eCarType, double ePersonalFee)
+            :base(eFullName,ePhoneNumber, eCarType)
+        {
+            personalCharge = ePersonalFee;
+        }
+
+        public DateTime PickUp
+        {
+            set { pickUpDate = value; }
+        }
+
+        public override double TotalCharges()
+        {
+            if (pickUpDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                personalCharge = 10;
+            }
+            else if (pickUpDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                personalCharge = 10;
+            }
+            else
+            {
+                personalCharge = 0;
+            }
+            amountDue = CarFee(amountDue);
+            amountDue += personalCharge;
+            return carFee;
+        }
+
+        public override string ToString()
+        {
+            TotalCharges();
+            double taxAmount = .10 * amountDue;
+            string str = $"Car Fee: {amountDue}";
+            str += "\r\n";
+            str += $"Additional weekend fee: {personalCharge}";
+            str += $"Tax:\t{taxAmount}";
+            str += $"Total Rental Charge: {carFee}";
+            return str;
+        }
+    }
+}
